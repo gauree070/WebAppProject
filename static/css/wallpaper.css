@@ -1,0 +1,32 @@
+/* wallpaper.css - Home-specific wallpaper (applies only on home page) */
+body.home-page {
+  background-image: url("../images/wallpaper.jpg"); /* Adjust path if needed */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+  position: relative;
+}
+body.home-page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* Overlay */
+  z-index: 1;
+}
+.home-welcome {
+  text-align: center;
+  color: white;
+  z-index: 2;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+}
+/* Add more styles as before (h1, p, buttons, responsive) */

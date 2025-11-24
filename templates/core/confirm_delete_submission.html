@@ -1,0 +1,16 @@
+{% extends 'core/base.html' %} {% block content %}
+<div class="container mt-4">
+  <h2>Delete Assignment</h2>
+  <p>
+    Are you sure you want to delete "{{ object.description|truncatewords:10 }}"?
+    This action cannot be undone.
+  </p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Yes, Delete It</button>
+    <a href="{% url 'core:teacher_dashboard' %}" class="btn btn-secondary"
+      >Cancel</a
+    >
+  </form>
+</div>
+{% endblock %}

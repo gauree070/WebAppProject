@@ -1,0 +1,27 @@
+{% extends 'core/base.html' %} {% block content %}
+<h2>Student Dashboard</h2>
+
+<a href="{% url 'core:enroll_subject' %}" class="btn btn-success mb-3"
+  >Enroll in Subject</a
+>
+
+<h3>Your Enrollments</h3>
+<ul class="list-group mb-4">
+  {% for enrollment in enrollments %}
+  <li class="list-group-item">
+    <a
+      href="{% url 'core:subject_detail' enrollment.subject.id %}"
+      class="text-decoration-none fw-bold"
+    >
+      {{ enrollment.subject.name }}
+      <!-- CLICKABLE: Navigates to subject page -->
+    </a>
+  </li>
+  {% empty %}
+  <li class="list-group-item">You are not enrolled in any subjects yet.</li>
+  {% endfor %}
+</ul>
+
+<!-- Optional: Keep global lists for quick overview -->
+
+{% endblock %}

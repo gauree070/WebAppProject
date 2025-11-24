@@ -1,0 +1,90 @@
+{% extends 'core/base.html' %} {% block content %}
+<h2>Create Assignment for {{ subject.name }}</h2>
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %} {% if form.non_field_errors %}
+  <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+  {% endif %}
+
+  <div class="mb-3">
+    <label for="{{ form.topic.id_for_label }}" class="form-label">Topic</label>
+    {{ form.topic }} {% if form.topic.errors %}
+    <div class="alert alert-danger">{{ form.topic.errors }}</div>
+    {% endif %}
+  </div>
+
+  <!-- FIXED: Link for loading (uses GET ?topic= to preserve state) -->
+  <a
+    href="?topic={{ form.topic.value|default:'' }}"
+    class="btn btn-secondary mb-3"
+  >
+    Load Questions for Topic
+  </a>
+
+  {% if show_question_div %}
+  <div class="mb-3">
+    <label for="{{ form.questions.id_for_label }}" class="form-label"
+      >{{ form.questions.label }}</label
+    >
+    {{ form.questions }}
+    <small class="form-text text-muted">{{ form.questions.help_text }}</small>
+    {% if form.questions.errors %}
+    <div class="alert alert-danger">{{ form.questions.errors }}</div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <div class="mb-3">
+    <label for="{{ form.description.id_for_label }}" class="form-label"
+      >Description</label
+    >
+    {{ form.description }} {% if form.description.errors %}
+    <div class="alert alert-danger">{{ form.description.errors }}</div>
+    {% endif %}
+  </div>
+
+  <div class="mb-3">
+    <label for="{{ form.announcement_date.id_for_label }}" class="form-label"
+      >Announcement Date</label
+    >
+    {{ form.announcement_date }} {% if form.announcement_date.errors %}
+    <div class="alert alert-danger"></div>
+    {% endif %}
+  </div>
+
+  <div class="mb-3">
+    <label for="{{ form.due_date.id_for_label }}" class="form-label"
+      >Due Date</label
+    >
+    {{ form.due_date }} {% if form.due_date.errors %}
+    <div class="alert alert-danger"></div>
+    {% endif %}
+  </div>
+
+  <div class="mb-3">
+    <label for="{{ form.pdf_file.id_for_label }}" class="form-label"
+      >PDF File (Optional)</label
+    >
+    {{ form.pdf_file }} {% if form.pdf_file.errors %}
+    <div class="alert alert-danger">{{ form.pdf_file.errors }}</div>
+    {% endif %}
+  </div>
+
+  <button type="submit" class="btn btn-primary">Create Assignment</button>
+</form>
+
+<script>
+  // FIXED: Auto-load questions on topic change (no button click needed)
+  document
+    .getElementById("{{ form.topic.id_for_label }}")
+    .addEventListener("change", function () {
+      const selectedTopic = this.value;
+      if (selectedTopic) {
+        window.location.href = `?topic=${encodeURIComponent(selectedTopic)}`;
+      } else {
+        window.location.href = window.location.pathname; // Clear topic/questions
+      }
+    });
+</script>
+
+{% endblock %}

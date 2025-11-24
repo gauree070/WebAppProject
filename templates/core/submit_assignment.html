@@ -1,0 +1,91 @@
+{% extends 'core/base.html' %} {% load static %} {% block content %}
+<h2>Submit Assignment: {{ assignment.topic }}</h2>
+<p><strong>Description:</strong> {{ assignment.description }}</p>
+
+{% if assignment.pdf_file %}
+<p>
+  <a href="{{ assignment.pdf_file.url }}" class="btn btn-info">Download PDF</a>
+</p>
+{% endif %} {% if due_date_passed %}
+<div class="alert alert-danger">
+  Due date passed: {{ assignment.due_date|date:"M d, Y H:i" }}.
+</div>
+{% endif %}
+
+<!-- Success/Error Messages -->
+{% if messages %} {% for message in messages %}
+<div
+  class="alert alert-{{ message.tags }} alert-dismissible fade show"
+  role="alert"
+>
+  {{ message }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endfor %} {% endif %} {% if no_questions %}
+<div class="alert alert-warning">
+  No questions available for this assignment.
+</div>
+{% else %}
+<form
+  method="post"
+  {%
+  if
+  is_submitted
+  %}style="opacity: 0.6; pointer-events: none;"
+  {%
+  endif
+  %}
+>
+  {% csrf_token %} {% for q in selected_questions %}
+  <div class="mb-3">
+    <label for="answers_{{ q.id }}">
+      Que: {{ q.question|default:"No question text available."|safe }}
+    </label>
+    <textarea
+      name="answers_{{ q.id }}"
+      id="answers_{{ q.id }}"
+      class="form-control"
+      rows="3"
+      placeholder="Enter your answer here..."
+      required
+      {%
+      if
+      is_submitted
+      %}readonly
+      disabled{%
+      endif
+      %}
+    >
+{{ q.answer|default:'' }}</textarea
+    >
+    {% if q.hint %}
+    <small class="form-text text-muted">
+      <em>Hint:</em> {{ q.hint|safe }}
+    </small>
+    {% endif %}
+  </div>
+  {% empty %} {% endfor %} {% if not is_submitted %}
+  <button type="submit" class="btn btn-primary mt-3">Submit Answers</button>
+  {% else %}
+  <button type="button" class="btn btn-secondary mt-3" disabled>
+    Already Submitted
+  </button>
+  <div class="alert alert-success mt-3">
+    <strong>Submitted!</strong> Your answers have been saved successfully.
+    Review them above.
+  </div>
+  {% endif %}
+</form>
+{% endif %}
+
+<style>
+  .form-control:disabled {
+    background-color: #f8f9fa;
+    opacity: 1;
+  }
+  form[style*="opacity"] label,
+  form[style*="opacity"] .form-text {
+    opacity: 1;
+  }
+</style>
+{% endblock %}

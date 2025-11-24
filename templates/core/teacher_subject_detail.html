@@ -1,0 +1,94 @@
+{% extends 'core/base.html' %} {% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{{ subject.name }} (Code: {{ subject.code|default:"N/A" }})</h2>
+    <div>
+      <a
+        href="{% url 'core:teacher_dashboard' %}"
+        class="btn btn-secondary me-2"
+        >← Back to Dashboard</a
+      >
+      <a
+        href="{% url 'core:create_assignment' subject.id %}"
+        class="btn btn-primary"
+        >Create Assignment</a
+      >
+    </div>
+  </div>
+
+  <!-- Generated Assignments for this subject -->
+  <h3>Generated Assignments</h3>
+  {% if assignments %}
+  <ul class="list-group mb-4">
+    {% for ass in assignments %}
+    <li
+      class="list-group-item d-flex justify-content-between align-items-center"
+    >
+      <div class="flex-grow-1">
+        <strong>{{ ass.topic }}</strong> Due: {{ ass.due_date }} | <br />
+        <small
+          ><strong>Q:</strong> {{ ass.display_question }} |
+          <em>Hint: {{ ass.display_hint }}</em></small
+        >
+      </div>
+      <form
+        method="post"
+        action="{% url 'core:delete_assignment' ass.id %}"
+        style="display: inline"
+        onsubmit="return confirm('Are you sure you want to delete this assignment?')"
+      >
+        {% csrf_token %}
+        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <div class="alert alert-info mb-4">
+    No assignments generated for {{ subject.name }} yet.
+    <a href="{% url 'core:create_assignment' subject.id %}">Create one</a>.
+  </div>
+  {% endif %}
+
+  <!-- Submissions for this subject -->
+  <h3>Submissions</h3>
+  {% if submissions %}
+  <table class="table table-bordered">
+    <thead class="thead-light">
+      <tr>
+        <th>Student</th>
+        <th>Assignment</th>
+        <th>Score</th>
+        <th>Feedback</th>
+        <th>Submitted</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for sub in submissions %}
+      <tr>
+        <td>{{ sub.student.username }}</td>
+        <td>{{ sub.assignment.topic }}</td>
+        <td>{{ sub.score|default:"Pending" }}</td>
+        <td>{{ sub.feedback|default:"No feedback yet" }}</td>
+        <td>{{ sub.submitted_at|date:"M d, Y" }}</td>
+        <td>
+          {% if sub.score is None %}
+          <a
+            href="{% url 'core:grade_submission' sub.id %}"
+            class="btn btn-sm btn-warning"
+            >Grade</a
+          >
+          {% else %}
+          <span class="badge bg-secondary">Graded</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="alert alert-info">No submissions for {{ subject.name }} yet.</div>
+  {% endif %}
+</div>
+{% endblock %}

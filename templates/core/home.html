@@ -1,0 +1,8 @@
+{% extends 'core/base.html' %} {% block content %}
+<div class="jumbotron text-center">
+  <h1>Welcome to Edu Platform!</h1>
+  <p class="lead">A simple learning management system.</p>
+  <a href="{% url 'core:register' %}" class="btn btn-primary me-2">Register</a>
+  <a href="{% url 'core:login' %}" class="btn btn-secondary">Login</a>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'core/base.html' %} {% block content %}
+<h2>Enroll in Subject</h2>
+<form method="post">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label class="form-label">Subject Code</label>
+    {{ form.code }}
+  </div>
+  <button type="submit" class="btn btn-primary">Enroll</button>
+</form>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'core/base.html' %} {% block content %}
+<h2>Login</h2>
+<form method="post">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label class="form-label">Username or Email</label>
+    {{ form.username }}
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Password</label>
+    {{ form.password }}
+  </div>
+  <button type="submit" class="btn btn-primary">Login</button>
+</form>
+<a href="{% url 'core:register' %}">No account? Register</a>
+{% endblock %}

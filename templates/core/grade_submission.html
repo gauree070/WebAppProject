@@ -1,0 +1,28 @@
+{% extends 'core/base.html' %} {% block content %}
+<h2>Grade Submission</h2>
+<p>Student: {{ submission.student.username }}</p>
+<p>Assignment: {{ submission.assignment }}</p>
+<p>Question: {{ submission.question}}</p>
+<p>Answers: {{ submission.answers }}</p>
+<form method="post">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label class="form-label">Score (0-10)</label>
+    <input
+      type="number"
+      name="score"
+      class="form-control"
+      min="0"
+      max="10"
+      required
+    />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Feedback</label>
+    <textarea name="feedback" class="form-control" rows="3"></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">
+    Grade & Generate Adaptive
+  </button>
+</form>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'core/base.html' %} {% block content %}
+<div class="container mt-4">
+  <h2>{{ subject.name }} Assignments</h2>
+  <a href="{% url 'core:student_dashboard' %}" class="btn btn-secondary mb-3"
+    >← Back to Dashboard</a
+  >
+
+  <h3>Available Assignments</h3>
+  {% if available_assignments %}
+  <ul class="list-group mb-4">
+    {% for ass in available_assignments %}
+    <li class="list-group-item">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          {{ ass.topic }} (Due: {{ ass.due_date|date:"M d, Y" }})<br />
+          <small><strong>Q:</strong> {{ ass.display_question }} </small>
+        </div>
+        <a
+          href="{% url 'core:submit_assignment' ass.id %}"
+          class="btn btn-sm btn-primary"
+          >Solve</a
+        >
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <div class="alert alert-info">
+    No available assignments for {{ subject.name }} at the moment.
+  </div>
+  {% endif %}
+
+  <h3>Your Submitted Assignments</h3>
+  {% if submissions %}
+  <table class="table table-bordered">
+    <thead class="thead-light">
+      <tr>
+        <th>Assignment</th>
+        <th>Score</th>
+        <th>Feedback</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for sub in submissions %}
+      <tr>
+        <td>{{ sub.assignment.topic }}</td>
+        <td>{{ sub.score|default:"Pending" }}</td>
+        <td>{{ sub.feedback|default:"No feedback yet" }}</td>
+        <td>
+          <form
+            method="post"
+            action="{% url 'core:delete_submission' sub.id %}"
+            style="display: inline"
+            onsubmit="return confirm('Are you sure you want to delete this submission? This action cannot be undone.')"
+          >
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="alert alert-info">No submissions for {{ subject.name }} yet.</div>
+  {% endif %}
+</div>
+{% endblock %}
